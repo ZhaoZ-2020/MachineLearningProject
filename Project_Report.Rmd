@@ -3,8 +3,8 @@ title: "Machine Learning Project Report"
 author: "Zhao Zheng"
 date: "8/11/2020"
 output:
-  pdf_document: default
-  html_document: default
+  md_document:
+    variant: markdown_github
 ---
 
 ```{r setup, include=FALSE}
@@ -27,7 +27,7 @@ The training data set provided by the course is split into 60% (*training*) and 
 5. Support vector machine;
 6. Combined model using models 3-5.
 
-Cross validation is done using K-fold method, and the final model I select is **Random Forest**. After apply it on my *testing* set, I manage to get an accuracy of 99.8%.   
+Cross validation is done using K-fold method, and the final model I select is **Random Forest**. After apply it on my *testing* set, I manage to get an accuracy of 99.7%.   
 Therefore, I use this model to predict the actives using the testing set provided to us (the one with 20 observations) and I get all the outcome correct (known from the quiz results).
 
 
