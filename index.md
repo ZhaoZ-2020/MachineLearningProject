@@ -7,10 +7,6 @@ output:
   pdf_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(cache = TRUE)
-```
 
 ## Link to my repository
 Please refer to the link below for my repo, which contains the .md, .rmd, and data files:
@@ -39,7 +35,7 @@ Therefore, I use this model to predict the actives using the testing set provide
 ## Data Slicing
 I split the data into training set (60%) and testing set (40%), and all the analysis below was only done on the training set, except the model validation.
 
-```{r}
+```{r, cache=TRUE}
 data<-read.csv("./Data/pml-training.csv", header =T, na.strings=c("","NA","#DIV/0!"))
 library(caret)
 set.seed(123)
@@ -50,7 +46,7 @@ dim(training); dim(testing)
 
 For cross-validation purpose, I further split the training data set into `k=5` folds. Later I will calculate the average of the accuracy from each model I built, across the five folds, to decide which is the best one.
 
-```{r}
+```{r, cache=TRUE}
 set.seed(456)
 folds<-createFolds(y=training$classe, k=5,
                    list=TRUE, returnTrain=TRUE)
@@ -65,7 +61,7 @@ The training set (from the first fold) has 9420 observations and 160 variables. 
 ### Changing variables' format
 Majority of the variables are numerical, except for user_name, cvtd_timestamp, new_window and classe.
 The variable cvtd_timestamp contains the information of the data and time when the activity was performed, so I change it to the number of days comparing to the earliest date. For the rest of the string variables, I change them into factors.
-```{r}
+```{r, cache=TRUE}
 train1<-training[folds[[1]],]
 library(lubridate)
 train1$cvtd_timestamp<-strptime(train1$cvtd_timestamp, "%d/%m/%Y %H:%M")
@@ -86,7 +82,7 @@ When looking at the summary tables of all the other variables, I notice there ar
 
 The p-value of the Chi-squared test is quite large at 0.6, which indicates the distribution of the five activities under `classe` is **not** significantly different for the two `new_window` categories. This gives me some confidence to remove those variables which have NAs for `new_window=='no'` (i.e. more than 90% of the values are NA).
 
-```{r}
+```{r, cache=TRUE}
 table(train1$new_window, train1$class)
 prop.table(table(train1$new_window, train1$class),1)
 chisq.test(train1$new_window, train1$classe)
@@ -138,8 +134,6 @@ I apply my final model on the testing data set provided by the course (the one w
 
 ### Removing varaibles with a lot of NAs
 ```{r}
-## Removing variables
-
 removena<-function(data) {
     removeindex<-NULL
     for (i in 1:dim(data)[2]) {
