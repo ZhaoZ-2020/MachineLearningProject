@@ -2,7 +2,7 @@ Link to my repo
 ---------------
 
 Please refer to the link below for my repo, which contains the .md,
-.rmd, and data files:
+.rmd, and data files:  
 <a href="https://github.com/ZhaoZ-2020/MachineLearningProject" class="uri">https://github.com/ZhaoZ-2020/MachineLearningProject</a>
 
 Background
@@ -36,7 +36,7 @@ this cleaning set, and they are:
 
 Cross validation is done using K-fold method, and the final model I
 select is **Random Forest**. After apply it on my *testing* set, I
-manage to get an accuracy of 99.8%.  
+manage to get an accuracy of 99.7%.  
 Therefore, I use this model to predict the actives using the testing set
 provided to us (the one with 20 observations) and I get all the outcome
 correct (known from the quiz results).
