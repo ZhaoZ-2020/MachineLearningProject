@@ -35,18 +35,18 @@ Therefore, I use this model to predict the actives using the testing set provide
 ## Data Slicing
 I split the data into training set (60%) and testing set (40%), and all the analysis below was only done on the training set, except the model validation.  
 
-```{r, cache=TRUE}
+```{r} 
 data<-read.csv("./Data/pml-training.csv", header =T, na.strings=c("","NA","#DIV/0!"))
 library(caret)
 set.seed(123)
 inTrain = createDataPartition(data$classe, p = 0.6)[[1]]
 training = data[ inTrain,]; testing= data[-inTrain,]
-dim(training); dim(testing)
+dim(training); dim(testing) 
 ```
   
 For cross-validation purpose, I further split the training data set into `k=5` folds. Later I will calculate the average of the accuracy from each model I built, across the five folds, to decide which is the best one.  
 
-```{r, cache=TRUE}
+```{r}
 set.seed(456)
 folds<-createFolds(y=training$classe, k=5,
                    list=TRUE, returnTrain=TRUE)
@@ -63,7 +63,7 @@ The training set (from the first fold) has 9420 observations and 160 variables. 
 Majority of the variables are numerical, except for user_name, cvtd_timestamp, new_window and classe.
 The variable cvtd_timestamp contains the information of the data and time when the activity was performed, so I change it to the number of days comparing to the earliest date. For the rest of the string variables, I change them into factors.  
 
-```{r, cache=TRUE}
+```{r}
 train1<-training[folds[[1]],]
 library(lubridate)
 train1$cvtd_timestamp<-strptime(train1$cvtd_timestamp, "%d/%m/%Y %H:%M")
@@ -84,7 +84,7 @@ When looking at the summary tables of all the other variables, I notice there ar
 
 The p-value of the Chi-squared test is quite large at 0.6, which indicates the distribution of the five activities under `classe` is **not** significantly different for the two `new_window` categories. This gives me some confidence to remove those variables which have NAs for `new_window=='no'` (i.e. more than 90% of the values are NA).  
 
-```{r, cache=TRUE}
+```{r}
 table(train1$new_window, train1$class)
 prop.table(table(train1$new_window, train1$class),1)
 chisq.test(train1$new_window, train1$classe)
@@ -104,7 +104,7 @@ Five models are fitted on the final training data set, and the accuracy were pro
 
 The accuracy (on data set `train1`) are provided below:  
 
-```{r, echo=FALSE}
+```{r}
 accu_insample<-data.frame(0.7691, 0.5298, 0.9999, 0.9945, 0.9444)
 names(accu_insample)<-c("Multinomial","Tree","Random_Forest","Boosting","SVM")
 row.names(accu_insample)<-"In_sample_accuracy"
@@ -115,7 +115,7 @@ As we can see, the last three models all have accuracy more than 90%. I also fit
 
 Then I perform cross-validation by repeating the whole model fitting process using the other four folds and the final accuracy table below are the average of the five sets of out of sample accuracy.  
 
-```{r, echo=FALSE}
+```{r}
 accu_outsample<-data.frame(0.7658, 0.4521, 0.9962, 0.9882, 0.9350, 0.9968)
 names(accu_outsample)<-c("Multinomial","Tree","Random_Forest","Boosting","SVM", "Combined")
 row.names(accu_outsample)<-"Out_sample_accuracy"
